@@ -16,7 +16,7 @@ function readFromCSV(path) {
 }
 
 function findTraineeById(id) {
-  for (let i = 0; i < trainees.length; i++) {
+  for (let i = 0; i < filteredTrainees.length; i++) {
     if (id === trainees[i].id) { // if trainee's match
       return trainees[i];
     }
@@ -111,7 +111,7 @@ function newTrainee() {
 // Constructor for a blank ranking list
 function newRanking() {
   // holds the ordered list of rankings that the user selects
-  let ranking = new Array(12);
+  let ranking = new Array(16);
   for (let i = 0; i < ranking.length; i++) {
     ranking[i] = newTrainee();
   }
@@ -150,9 +150,9 @@ function clearRanking() {
   let ranking_chart = document.getElementById("ranking__pyramid");
   let rankRows = Array.from(ranking_chart.children).slice(1); // remove the title element
   // let rankEntry = rankRows[0].children[0];
-  for (let i = 0; i < rowNums.length; i++) {
+  for (let i = 0; i < 4; i++) { // There are 4 rows in the 16-person ranking
     let rankRow = rankRows[i];
-    for (let j = 0; j < rowNums[i]; j++) {
+    for (let j = 0; j < 4; j++) { // Each row has 4 trainees in this example
       removeAllChildren(rankRow);
     }
   }
@@ -163,7 +163,7 @@ function populateTable(trainees) {
   // Currently just duplicates the first table entry
   let table = document.getElementById("table__entry-container");
   exampleEntry = table.children[0];
-  for (let i = 0; i < trainees.length; i++) {
+  for (let i = 0; i < filteredTrainees.length; i++) {
     // generate and insert the html for a new trainee table entry
     table.insertAdjacentHTML("beforeend", populateTableEntry(trainees[i]));
     // add the click listener to the just inserted element
@@ -207,9 +207,9 @@ function populateRanking() {
   let rankRows = Array.from(ranking_chart.children).slice(1); // remove the title element
   // let rankEntry = rankRows[0].children[0];
   let currRank = 1;
-  for (let i = 0; i < rowNums.length; i++) {
+  for (let i = 0; i < 4; i++) { // There are 4 rows in the 16-person ranking
     let rankRow = rankRows[i];
-    for (let j = 0; j < rowNums[i]; j++) {
+    for (let j = 0; j < 4; j++) { // Each row has 4 trainees in this example
       let currTrainee = ranking[currRank-1];
       rankRow.insertAdjacentHTML("beforeend", populateRankingEntry(currTrainee, currRank))
 
@@ -257,7 +257,7 @@ function populateRankingEntry(trainee, currRank) {
     <div class="ranking__entry-view">
       <div class="ranking__entry-icon">
         <img class="ranking__entry-img" src="assets/trainees/${trainee.image}" />
-        <div class="ranking__entry-icon-border ${trainee.grade.toLowerCase()}-rank-border" data-rankid="${currRank-1}"></div>
+        <div class="ranking__entry-icon-border ${trainee.grade.toLowerCase()}-rank-border" data-rankid="${i * 4 + j}"></div>
       </div>
       <div class="ranking__entry-icon-badge bg-${trainee.grade.toLowerCase()}">${currRank}</div>
       ${
@@ -421,7 +421,7 @@ var trainees = [];
 var filteredTrainees = [];
 // holds the ordered list of rankings that the user selects
 var ranking = newRanking();
-const rowNums = [1, 2, 4, 5];
+const rowNums = [1, 2, 4, 5, 4];
 //window.addEventListener("load", function () {
   populateRanking();
   readFromCSV("./trainee_info.csv");
